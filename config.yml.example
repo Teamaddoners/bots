@@ -1,0 +1,109 @@
+bot:
+  token: "YOUR_BOT_TOKEN_HERE"
+  prefix: "!"
+  ownerId: "YOUR_USER_ID_HERE"
+  status: "online"
+  activity:
+    type: "WATCHING"
+    name: "Managing servers"
+
+permissions:
+  adminRoles: []
+  moderatorRoles: []
+  djRoles: []
+
+modules:
+  moderation:
+    enabled: true
+    autoMod:
+      enabled: true
+      spamProtection: true
+      capsFilter: true
+      linkFilter: false
+      profanityFilter: false
+    commands:
+      kick: { enabled: true, cooldown: 3 }
+      ban: { enabled: true, cooldown: 5 }
+      mute: { enabled: true, cooldown: 3 }
+      clear: { enabled: true, cooldown: 2 }
+
+  leveling:
+    enabled: true
+    messageXP: 15
+    voiceXP: 10
+    levelUpMessage: true
+    levelUpChannel: null
+    roleRewards: []
+    xpBoosters: []
+
+  welcomer:
+    enabled: true
+    welcomeChannel: null
+    leaveChannel: null
+    welcomeMessage: "Welcome {user} to {server}!"
+    leaveMessage: "{user} has left {server}."
+    autoRoles: []
+    welcomeCard:
+      enabled: true
+      background: "#2C2F33"
+      textColor: "#FFFFFF"
+      showAvatar: true
+      showLevel: true
+
+  tickets:
+    enabled: true
+    panels: []
+    transcriptChannel: null
+    autoClose:
+      enabled: false
+      time: 24
+
+  polls:
+    enabled: true
+    defaultDuration: 24
+    allowMultiple: false
+    requireRole: null
+
+  music:
+    enabled: true
+    defaultVolume: 50
+    djRole: null
+    maxQueue: 100
+    defaultPlaylist: null
+
+  social:
+    enabled: true
+    youtube:
+      enabled: false
+      channel: null
+      webhook: null
+    twitter:
+      enabled: false
+      accounts: []
+    twitch:
+      enabled: false
+      streamers: []
+    reddit:
+      enabled: false
+      subreddits: []
+
+  premium:
+    enabled: false
+    features:
+      customStatus: false
+      removeBranding: false
+      customModules: false
+      verification: false
+      autoReact: false
+      starboard: false
+      tempVoice: false
+      stickyMessages: false
+      emojiManager: false
+      birthdays: false
+      suggestions: false
+
+webEditor:
+  enabled: true
+  port: 3000
+  adminOnly: true
+  theme: "dark"

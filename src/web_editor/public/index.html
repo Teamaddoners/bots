@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crenors Bot Configuration Editor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'discord': {
+                            'dark': '#2C2F33',
+                            'darker': '#23272A',
+                            'light': '#99AAB5',
+                            'blurple': '#5865F2',
+                            'green': '#43B581',
+                            'red': '#F04747',
+                            'yellow': '#FAA61A'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Global dark styles for form controls to ensure visibility */
+        input[type="text"], input[type="password"], input[type="number"], input[type="range"], select, textarea {
+            background-color: #36393f !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(185,187,190,0.2) !important;
+        }
+        input::placeholder, textarea::placeholder { color: #99AAB5 !important; }
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button { filter: invert(1); }
+        input[type="range"]::-webkit-slider-thumb { background: #5865F2; }
+        input[type="range"]::-moz-range-thumb { background: #5865F2; }
+    </style>
+</head>
+<body class="bg-discord-darker text-white min-h-screen">
+    <div id="app">
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-discord-blurple to-purple-600 shadow-lg">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-white/20 p-2 rounded-lg">
+                            <i class="fas fa-robot text-2xl text-white"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold text-white">Crenors Bot</h1>
+                            <p class="text-sm text-white/80">Made by Team Addoners</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button id="menuToggle" class="md:hidden bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg transition-colors">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <button id="saveBtn" class="bg-discord-green hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center space-x-2">
+                            <i class="fas fa-save"></i>
+                            <span>Save</span>
+                        </button>
+                        <button id="exportBtn" class="bg-discord-light hover:bg-gray-500 text-white px-4 py-2 rounded-lg transition-colors flex items-center space-x-2">
+                            <i class="fas fa-download"></i>
+                            <span>Export</span>
+                        </button>
+                        <button id="importBtn" class="bg-discord-light hover:bg-gray-500 text-white px-4 py-2 rounded-lg transition-colors flex items-center space-x-2">
+                            <i class="fas fa-upload"></i>
+                            <span>Import</span>
+                        </button>
+                        <!-- Theme toggle removed: dark mode only -->
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex min-h-screen">
+            <!-- Sidebar Navigation -->
+            <nav class="w-80 bg-discord-dark border-r border-discord-light/20 flex flex-col">
+                <div class="p-6">
+                    <div class="mb-4">
+                        <div class="relative">
+                            <input id="navSearch" type="text" placeholder="Search modules..." class="w-full px-4 py-2 bg-discord-darker border border-discord-light/20 rounded-lg text-white placeholder-discord-light focus:outline-none focus:ring-2 focus:ring-discord-blurple focus:border-transparent">
+                            <i class="fas fa-search absolute right-3 top-2.5 text-discord-light"></i>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-xs font-semibold text-discord-light uppercase tracking-wider mb-3">Core Settings</h3>
+                            <ul class="space-y-1">
+                                <li><a href="#bot" class="nav-link active flex items-center space-x-3 px-3 py-2 rounded-lg text-discord-light hover:bg-discord-blurple/20 hover:text-white transition-colors"><i class="fas fa-cog w-4"></i><span>Bot Settings</span></a></li>
+                                <li><a href="#permissions" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg text-discord-light hover:bg-discord-blurple/20 hover:text-white transition-colors"><i class="fas fa-shield-alt w-4"></i><span>Permissions</span></a></li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xs font-semibold text-discord-light uppercase tracking-wider mb-3">Modules</h3>
+                            <ul class="space-y-1">
+                                <li><a href="#moderation" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg text-discord-light hover:bg-discord-blurple/20 hover:text-white transition-colors"><i class="fas fa-gavel w-4"></i><span>Moderation</span></a></li>
+                                <li><a href="#leveling" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg text-discord-light hover:bg-discord-blurple/20 hover:text-white transition-colors"><i class="fas fa-trophy w-4"></i><span>Leveling</span></a></li>
+                                <li><a href="#welcomer" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg text-discord-light hover:bg-discord-blurple/20 hover:text-white transition-colors"><i class="fas fa-door-open w-4"></i><span>Welcomer</span></a></li>
+                                <li><a href="#tickets" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg text-discord-light hover:bg-discord-blurple/20 hover:text-white transition-colors"><i class="fas fa-ticket-alt w-4"></i><span>Tickets</span></a></li>
+                                <li><a href="#polls" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg text-discord-light hover:bg-discord-blurple/20 hover:text-white transition-colors"><i class="fas fa-poll w-4"></i><span>Polls</span></a></li>
+                                <li><a href="#music" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg text-discord-light hover:bg-discord-blurple/20 hover:text-white transition-colors"><i class="fas fa-music w-4"></i><span>Music</span></a></li>
+                                <li><a href="#social" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg text-discord-light hover:bg-discord-blurple/20 hover:text-white transition-colors"><i class="fas fa-share-alt w-4"></i><span>Social Media</span></a></li>
+                                <li><a href="#premium" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg text-discord-light hover:bg-discord-blurple/20 hover:text-white transition-colors"><i class="fas fa-crown w-4"></i><span>Premium</span></a></li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xs font-semibold text-discord-light uppercase tracking-wider mb-3">Tools</h3>
+                            <ul class="space-y-1">
+                                <li><a href="#embed-builder" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg text-discord-light hover:bg-discord-blurple/20 hover:text-white transition-colors"><i class="fas fa-code w-4"></i><span>Embed Builder</span></a></li>
+                                <li><a href="#preview" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg text-discord-light hover:bg-discord-blurple/20 hover:text-white transition-colors"><i class="fas fa-eye w-4"></i><span>Preview</span></a></li>
+                                <li><a href="#validation" class="nav-link flex items-center space-x-3 px-3 py-2 rounded-lg text-discord-light hover:bg-discord-blurple/20 hover:text-white transition-colors"><i class="fas fa-check-circle w-4"></i><span>Validation</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="flex-1 bg-discord-darker">
+                <div id="content-area" class="p-8">
+                    <!-- Bot Settings -->
+                    <div id="bot" class="config-section active">
+                        <div class="mb-8">
+                            <h2 class="text-3xl font-bold text-white mb-2">Bot Settings</h2>
+                            <p class="text-discord-light">Configure your Crenors bot settings</p>
+                        </div>
+                        <div class="space-y-6">
+                            <div>
+                                <label for="botToken" class="block text-sm font-medium text-discord-light mb-2">Bot Token</label>
+                                <input type="password" id="botToken" class="w-full px-4 py-3 bg-discord-dark border border-discord-light/20 rounded-lg text-white placeholder-discord-light focus:outline-none focus:ring-2 focus:ring-discord-blurple focus:border-transparent" placeholder="Enter bot token">
+                                <p class="mt-2 text-sm text-discord-light">Your Discord bot token from the Discord Developer Portal</p>
+                            </div>
+                            <div>
+                                <label for="botPrefix" class="block text-sm font-medium text-discord-light mb-2">Command Prefix</label>
+                                <input type="text" id="botPrefix" class="w-full px-4 py-3 bg-discord-dark border border-discord-light/20 rounded-lg text-white placeholder-discord-light focus:outline-none focus:ring-2 focus:ring-discord-blurple focus:border-transparent" placeholder="!">
+                            </div>
+                            <div>
+                                <label for="ownerId" class="block text-sm font-medium text-discord-light mb-2">Owner ID</label>
+                                <input type="text" id="ownerId" class="w-full px-4 py-3 bg-discord-dark border border-discord-light/20 rounded-lg text-white placeholder-discord-light focus:outline-none focus:ring-2 focus:ring-discord-blurple focus:border-transparent" placeholder="Your Discord User ID">
+                            </div>
+                            <div>
+                                <label for="botStatus" class="block text-sm font-medium text-discord-light mb-2">Bot Status</label>
+                                <select id="botStatus" class="w-full px-4 py-3 bg-discord-dark border border-discord-light/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-discord-blurple focus:border-transparent">
+                                    <option value="online">Online</option>
+                                    <option value="idle">Idle</option>
+                                    <option value="dnd">Do Not Disturb</option>
+                                    <option value="invisible">Invisible</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="activityType" class="block text-sm font-medium text-discord-light mb-2">Activity Type</label>
+                                <select id="activityType" class="w-full px-4 py-3 bg-discord-dark border border-discord-light/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-discord-blurple focus:border-transparent">
+                                    <option value="WATCHING">Watching</option>
+                                    <option value="LISTENING">Listening</option>
+                                    <option value="PLAYING">Playing</option>
+                                    <option value="STREAMING">Streaming</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="activityName" class="block text-sm font-medium text-discord-light mb-2">Activity Text</label>
+                                <input type="text" id="activityName" class="w-full px-4 py-3 bg-discord-dark border border-discord-light/20 rounded-lg text-white placeholder-discord-light focus:outline-none focus:ring-2 focus:ring-discord-blurple focus:border-transparent" placeholder="Crenors Bot - Made by Team Addoners">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Moderation Settings -->
+                    <div id="moderation" class="config-section">
+                        <h2>Moderation Module</h2>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="moderationEnabled">
+                                <span class="checkmark"></span>
+                                Enable Moderation Module
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="autoModEnabled">
+                                <span class="checkmark"></span>
+                                Enable Auto-Moderation
+                            </label>
+                        </div>
+                        <div class="auto-mod-options">
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="spamProtection">
+                                    <span class="checkmark"></span>
+                                    Spam Protection
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="capsFilter">
+                                    <span class="checkmark"></span>
+                                    Caps Filter
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="linkFilter">
+                                    <span class="checkmark"></span>
+                                    Link Filter
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="profanityFilter">
+                                    <span class="checkmark"></span>
+                                    Profanity Filter
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Leveling Settings -->
+                    <div id="leveling" class="config-section">
+                        <h2>Leveling System</h2>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="levelingEnabled">
+                                <span class="checkmark"></span>
+                                Enable Leveling System
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="messageXP">Message XP</label>
+                                <input type="number" id="messageXP" class="w-full px-4 py-3 bg-discord-dark border border-discord-light/20 rounded-lg text-white placeholder-discord-light focus:outline-none focus:ring-2 focus:ring-discord-blurple focus:border-transparent" min="1" max="100" placeholder="15">
+                        </div>
+                        <div class="form-group">
+                            <label for="voiceXP">Voice XP</label>
+                                <input type="number" id="voiceXP" class="w-full px-4 py-3 bg-discord-dark border border-discord-light/20 rounded-lg text-white placeholder-discord-light focus:outline-none focus:ring-2 focus:ring-discord-blurple focus:border-transparent" min="1" max="100" placeholder="10">
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="levelUpMessage">
+                                <span class="checkmark"></span>
+                                Send Level Up Messages
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="levelUpChannel">Level Up Channel</label>
+                            <input type="text" id="levelUpChannel" class="form-control" placeholder="Channel ID or #channel">
+                        </div>
+                    </div>
+
+                    <!-- Welcomer Settings -->
+                    <div id="welcomer" class="config-section">
+                        <h2>Welcomer System</h2>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="welcomerEnabled">
+                                <span class="checkmark"></span>
+                                Enable Welcomer System
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="welcomeChannel">Welcome Channel</label>
+                            <input type="text" id="welcomeChannel" class="form-control" placeholder="Channel ID or #channel">
+                        </div>
+                        <div class="form-group">
+                            <label for="leaveChannel">Leave Channel</label>
+                            <input type="text" id="leaveChannel" class="form-control" placeholder="Channel ID or #channel">
+                        </div>
+                        <div class="form-group">
+                            <label for="welcomeMessage">Welcome Message</label>
+                            <textarea id="welcomeMessage" class="form-control" rows="3" placeholder="Welcome {user} to {server}!"></textarea>
+                            <small class="form-text">Available variables: {user}, {server}, {memberCount}</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="leaveMessage">Leave Message</label>
+                            <textarea id="leaveMessage" class="form-control" rows="3" placeholder="{user} has left {server}."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="welcomeCardEnabled">
+                                <span class="checkmark"></span>
+                                Enable Welcome Cards
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Tickets Settings -->
+                    <div id="tickets" class="config-section">
+                        <h2>Ticket System</h2>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="ticketsEnabled">
+                                <span class="checkmark"></span>
+                                Enable Ticket System
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="transcriptChannel">Transcript Channel</label>
+                            <input type="text" id="transcriptChannel" class="form-control" placeholder="Channel ID or #channel">
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="autoCloseEnabled">
+                                <span class="checkmark"></span>
+                                Enable Auto-Close
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="autoCloseTime">Auto-Close Time (hours)</label>
+                            <input type="number" id="autoCloseTime" class="w-full px-4 py-3 bg-discord-dark border border-discord-light/20 rounded-lg text-white placeholder-discord-light focus:outline-none focus:ring-2 focus:ring-discord-blurple focus:border-transparent" min="1" max="168" placeholder="24">
+                        </div>
+                    </div>
+
+                    <!-- Polls Settings -->
+                    <div id="polls" class="config-section">
+                        <h2>Poll System</h2>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="pollsEnabled">
+                                <span class="checkmark"></span>
+                                Enable Poll System
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="defaultDuration">Default Duration (hours)</label>
+                            <input type="number" id="defaultDuration" class="w-full px-4 py-3 bg-discord-dark border border-discord-light/20 rounded-lg text-white placeholder-discord-light focus:outline-none focus:ring-2 focus:ring-discord-blurple focus:border-transparent" min="1" max="168" placeholder="24">
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="allowMultiple">
+                                <span class="checkmark"></span>
+                                Allow Multiple Votes
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Music Settings -->
+                    <div id="music" class="config-section">
+                        <h2>Music Player</h2>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="musicEnabled">
+                                <span class="checkmark"></span>
+                                Enable Music Player
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="defaultVolume">Default Volume</label>
+                            <input type="range" id="defaultVolume" class="w-full h-2 bg-discord-dark rounded-lg appearance-none cursor-pointer" min="0" max="100" value="50">
+                            <span id="volumeDisplay">50%</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="maxQueue">Max Queue Size</label>
+                            <input type="number" id="maxQueue" class="form-control" min="10" max="1000">
+                        </div>
+                        <div class="form-group">
+                            <label for="djRole">DJ Role</label>
+                            <input type="text" id="djRole" class="form-control" placeholder="Role ID or @role">
+                        </div>
+                    </div>
+
+                    <!-- Social Media Settings -->
+                    <div id="social" class="config-section">
+                        <h2>Social Media Notifications</h2>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="socialEnabled">
+                                <span class="checkmark"></span>
+                                Enable Social Media Module
+                            </label>
+                        </div>
+                        
+                        <div class="social-platform">
+                            <h3>YouTube</h3>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="youtubeEnabled">
+                                    <span class="checkmark"></span>
+                                    Enable YouTube Notifications
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="youtubeChannel">YouTube Channel</label>
+                                <input type="text" id="youtubeChannel" class="form-control" placeholder="Channel ID or URL">
+                            </div>
+                        </div>
+
+                        <div class="social-platform">
+                            <h3>Twitter/X</h3>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="twitterEnabled">
+                                    <span class="checkmark"></span>
+                                    Enable Twitter Notifications
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="social-platform">
+                            <h3>Twitch</h3>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="twitchEnabled">
+                                    <span class="checkmark"></span>
+                                    Enable Twitch Notifications
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Premium Settings -->
+                    <div id="premium" class="config-section">
+                        <h2>Premium Features</h2>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="premiumEnabled">
+                                <span class="checkmark"></span>
+                                Enable Premium Features
+                            </label>
+                        </div>
+                        
+                        <div class="premium-features">
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="customStatus">
+                                    <span class="checkmark"></span>
+                                    Custom Status
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="removeBranding">
+                                    <span class="checkmark"></span>
+                                    Remove Branding
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="verification">
+                                    <span class="checkmark"></span>
+                                    Verification System
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="starboard">
+                                    <span class="checkmark"></span>
+                                    Starboard
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="tempVoice">
+                                    <span class="checkmark"></span>
+                                    Temporary Voice Channels
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="birthdays">
+                                    <span class="checkmark"></span>
+                                    Birthday Tracking
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Embed Builder -->
+                    <div id="embed-builder" class="config-section">
+                        <h2>Embed Builder</h2>
+                        <div class="embed-builder">
+                            <div class="embed-form">
+                                <div class="form-group">
+                                    <label for="embedTitle">Title</label>
+                                    <input type="text" id="embedTitle" class="form-control" placeholder="Embed title">
+                                </div>
+                                <div class="form-group">
+                                    <label for="embedDescription">Description</label>
+                                    <textarea id="embedDescription" class="form-control" rows="3" placeholder="Embed description"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="embedColor">Color</label>
+                                    <input type="color" id="embedColor" class="form-control" value="#0099ff">
+                                </div>
+                                <div class="form-group">
+                                    <label for="embedFooter">Footer</label>
+                                    <input type="text" id="embedFooter" class="form-control" placeholder="Footer text">
+                                </div>
+                            </div>
+                            <div class="embed-preview">
+                                <h3>Preview</h3>
+                                <div id="embedPreview" class="discord-embed">
+                                    <!-- Preview will be generated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preview -->
+                    <div id="preview" class="config-section">
+                        <h2>Configuration Preview</h2>
+                        <div class="preview-container">
+                            <pre id="configPreview"></pre>
+                        </div>
+                    </div>
+
+                    <!-- Validation -->
+                    <div id="validation" class="config-section">
+                        <h2>Configuration Validation</h2>
+                        <div id="validationResults" class="validation-results">
+                            <!-- Validation results will be shown here -->
+                        </div>
+                        <button id="validateBtn" class="btn btn-primary">
+                            <i class="fas fa-check"></i> Validate Configuration
+                        </button>
+                    </div>
+                </div>
+                <footer class="border-t border-discord-light/20 py-4 px-8 flex items-center justify-between">
+                    <span class="text-discord-light text-sm">© <span id="year"></span> Crenors · Made by Team Addoners</span>
+                    <a href="#" class="text-discord-light hover:text-white text-sm">Privacy & Terms</a>
+                </footer>
+            </main>
+        </div>
+
+        <!-- Import Modal -->
+        <div id="importModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Import Configuration</h3>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <input type="file" id="importFile" accept=".yml,.yaml,.json">
+                    <p>Select a configuration file to import</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="importConfirm" class="btn btn-primary">Import</button>
+                    <button id="importCancel" class="btn btn-secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notifications -->
+        <div id="toastContainer" class="toast-container"></div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
